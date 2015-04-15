@@ -24,10 +24,9 @@ if (argv.help || argv._[0] === 'help') {
 }
 else if (argv._[0] === 'tz') {
     placename(argv._[1], function (err, rows) {
-        if (err) return cb(err);
-        if (rows.length === 0) return cb(null, []);
+        if (err) return error(err);
         if (argv.n !== undefined) rows = rows.slice(0, argv.n);
-        else if (!argv.all) rows = [rows[0]];
+        else if (!argv.all) rows = rows.slice(0, 1);
         
         rows.forEach(function (row) {
             var name = ctz.calculate(row.lat, row.lon).timezone; 
@@ -40,8 +39,7 @@ else if (argv._[0] === 'offset') {
     var name = argv._[1];
     if (has(offsets, name)) return console.log(offsets[name]);
     placename(argv._.slice(1).join(' '), function (err, rows) {
-        if (err) return cb(err);
-        if (rows.length === 0) return cb(null, []);
+        if (err) return error(err);
         if (argv.n !== undefined) rows = rows.slice(0, argv.n);
         else if (!argv.all) rows = [rows[0]];
         
