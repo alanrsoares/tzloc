@@ -1,0 +1,28 @@
+tzloc TIME SRC DST
+tzloc TIME in SRC to DST (time)
+tzloc -t TIME -s SRC -d DST
+
+  Compute and print the time at DST when the time at SRC is TIME.
+  
+    -v --verbose  Show found source and destination.
+  
+  tzloc '5pm aug 20' 'beijing' 'seattle'
+  tzloc 11am in wellington to nyc time
+
+tzloc tz PLACE
+
+  Print the IANA time zone for PLACE.
+
+tzloc offset PLACE
+tzloc offset TZNAME
+
+  Print the timezone offset in minutes for TZNAME or the PLACE.
+
+tzloc help
+
+  Show this message.
+
+OPTIONS for all commands with multiple rows of output:
+
+  -a --all      Show all records, not just the first.
+  -n COUNT      Show COUNT records.     

@@ -6,6 +6,8 @@ var ctz = require('coordinate-tz');
 var placename = require('placename');
 var offsets = require('timezone-name-offsets');
 var has = require('has');
+var fs = require('fs');
+var path = require('path');
 
 var minimist = require('minimist');
 var argv = minimist(process.argv.slice(2), {
@@ -15,11 +17,18 @@ var argv = minimist(process.argv.slice(2), {
     },
     boolean: [ 'all' ]
 });
-if (argv._[0] === 'tz') {
+if (argv.help || argv._[0] === 'help') {
+    return fs.createReadStream(path.join(__dirname, 'usage.txt'))
+        .pipe(process.stdout)
+    ;
+}
+else if (argv._[0] === 'tz') {
     placename(argv._[1], function (err, rows) {
         if (err) return cb(err);
         if (rows.length === 0) return cb(null, []);
-        if (!argv.all) rows = [rows[0]];
+        if (argv.n !== undefined) rows = rows.slice(0, argv.n);
+        else if (!argv.all) rows = [rows[0]];
+        
         rows.forEach(function (row) {
             var name = ctz.calculate(row.lat, row.lon).timezone; 
             console.log(name);
@@ -33,7 +42,9 @@ else if (argv._[0] === 'offset') {
     placename(argv._.slice(1).join(' '), function (err, rows) {
         if (err) return cb(err);
         if (rows.length === 0) return cb(null, []);
-        if (!argv.all) rows = [rows[0]];
+        if (argv.n !== undefined) rows = rows.slice(0, argv.n);
+        else if (!argv.all) rows = [rows[0]];
+        
         rows.forEach(function (row) {
             var name = ctz.calculate(row.lat, row.lon).timezone; 
             if (argv.verbose) {
