@@ -2,6 +2,8 @@
 
 var tztime = require('../');
 var strftime = require('strftime');
+var ctz = require('coordinate-tz');
+var placename = require('placename');
 
 var minimist = require('minimist');
 var argv = minimist(process.argv.slice(2), {
@@ -11,6 +13,20 @@ var argv = minimist(process.argv.slice(2), {
     },
     boolean: [ 'all' ]
 });
+if (argv._[0] === 'tz') {
+    placename(argv._[1], function (err, rows) {
+        if (err) return cb(err);
+        if (rows.length === 0) return cb(null, []);
+        if (!argv.all) rows = [rows[0]];
+        rows.forEach(function (row) {
+            var name = ctz.calculate(row.lat, row.lon).timezone; 
+            console.log(name);
+        });
+    });
+    return;
+}
+
+if (argv._[0] === 'convert') argv._.shift();
 
 if (argv._.indexOf('in') >= 0 || argv._.indexOf('to') >= 0) {
     argv._ = argv._.join(' ')
