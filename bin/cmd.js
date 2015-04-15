@@ -4,12 +4,14 @@ var tztime = require('../');
 var strftime = require('strftime');
 var ctz = require('coordinate-tz');
 var placename = require('placename');
+var offsets = require('timezone-name-offsets');
+var has = require('has');
 
 var minimist = require('minimist');
 var argv = minimist(process.argv.slice(2), {
     alias: {
         s: 'src', d: 'dst', t: 'time',
-        a: 'all', h: 'help'
+        a: 'all', v: 'verbose', h: 'help'
     },
     boolean: [ 'all' ]
 });
@@ -21,6 +23,28 @@ if (argv._[0] === 'tz') {
         rows.forEach(function (row) {
             var name = ctz.calculate(row.lat, row.lon).timezone; 
             console.log(name);
+        });
+    });
+    return;
+}
+else if (argv._[0] === 'offset') {
+    var name = argv._[1];
+    if (has(offsets, name)) return console.log(offsets[name]);
+    placename(argv._.slice(1).join(' '), function (err, rows) {
+        if (err) return cb(err);
+        if (rows.length === 0) return cb(null, []);
+        if (!argv.all) rows = [rows[0]];
+        rows.forEach(function (row) {
+            var name = ctz.calculate(row.lat, row.lon).timezone; 
+            if (argv.verbose) {
+                console.log([
+                    offsets[name],
+                    row.name,
+                    row.adminCode,
+                    row.country
+                ].join('\t'));
+            }
+            else console.log(offsets[name]);
         });
     });
     return;
@@ -48,12 +72,15 @@ tztime(timestr, src, dst, function (err, times) {
     len = Math.min(times.length, len);
     for (var i = 0; i < len; i++) {
         var t = times[i];
-        console.log([
-            strftime('%F %T', t.date),
-            t.dst.name,
-            t.dst.adminCode,
-            t.dst.country,
-        ].filter(Boolean).join(' ').replace(/\s*\t\s*/g,'\t'));
+        if (argv.verbose) {
+            console.log([
+                strftime('%F %T', t.date),
+                t.dst.name,
+                t.dst.adminCode,
+                t.dst.country,
+            ].filter(Boolean).join('\t').replace(/\s*\t\s*/g,'\t'));
+        }
+        else console.log(strftime('%F %T', t.date));
     }
 });
 
