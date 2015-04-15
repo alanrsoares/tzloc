@@ -12,7 +12,7 @@ var argv = minimist(process.argv.slice(2), {
     boolean: [ 'all' ]
 });
 
-if (argv._.indexOf('in') >= 0 && argv._.indexOf('to') >= 0) {
+if (argv._.indexOf('in') >= 0 || argv._.indexOf('to') >= 0) {
     argv._ = argv._.join(' ')
         .split(/\b(?:in|to|time)\b/i)
         .map(function (s) { return s.trim() })
