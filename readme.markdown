@@ -75,7 +75,7 @@ Calculate the time in `dst` when the time in `src` is `timestr`.
 All matches for the placename strings `src` and `dst` are provided as pairs in
 `cb(err, rows)`.
 
-Each row has `src`, `dst`, and `date` properties. The `src` and `date` values
+Each row has `src`, `dst`, and `date` properties. The `src` and `dst` values
 are given by [placename](https://npmjs.org/package/placename) and augmented with
 the computed timezone. Each row looks like this:
 
