@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "coordinate-tz": "^0.1.2",
+    "has": "^1.0.0",
     "minimist": "^1.1.1",
     "parse-messy-time": "^1.2.0",
     "placename": "^1.0.0",
