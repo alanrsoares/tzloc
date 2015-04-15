@@ -34,8 +34,8 @@ module.exports = function (timestr, a, b, cb) {
             var soff = offsets[m.src.tz];
             var doff = offsets[m.dst.tz];
             var d = new Date(time);
-            d.setMinutes(soff - doff);
-            return { src: m.src, dst: m.dst, date: time };
+            d.setMinutes(d.getMinutes() - soff + doff);
+            return { src: m.src, dst: m.dst, date: d };
         }));
     }
 };
