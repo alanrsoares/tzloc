@@ -75,9 +75,8 @@ tztime(timestr, src, dst, function (err, times) {
         if (argv.verbose) {
             console.log([
                 strftime('%F %T', t.date),
-                t.dst.name,
-                t.dst.adminCode,
-                t.dst.country,
+                [ t.src.name, t.src.adminCode, t.src.country ].join(' '),
+                [ t.dst.name, t.dst.adminCode, t.dst.country ].join(' '),
             ].filter(Boolean).join('\t').replace(/\s*\t\s*/g,'\t'));
         }
         else console.log(strftime('%F %T', t.date));
