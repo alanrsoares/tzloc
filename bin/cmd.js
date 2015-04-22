@@ -17,19 +17,18 @@ var argv = minimist(process.argv.slice(2), {
     },
     boolean: [ 'all' ]
 });
-if (argv.help || argv._[0] === 'help') {
+if (!argv.s || argv.help || argv._[0] === 'help') {
     return fs.createReadStream(path.join(__dirname, 'usage.txt'))
-        .pipe(process.stdout)
-    ;
+        .pipe(process.stdout);
 }
 else if (argv._[0] === 'tz') {
     placename(argv._[1], function (err, rows) {
         if (err) return error(err);
         if (argv.n !== undefined) rows = rows.slice(0, argv.n);
         else if (!argv.all) rows = rows.slice(0, 1);
-        
+
         rows.forEach(function (row) {
-            var name = ctz.calculate(row.lat, row.lon).timezone; 
+            var name = ctz.calculate(row.lat, row.lon).timezone;
             console.log(name);
         });
     });
@@ -42,9 +41,9 @@ else if (argv._[0] === 'offset') {
         if (err) return error(err);
         if (argv.n !== undefined) rows = rows.slice(0, argv.n);
         else if (!argv.all) rows = [rows[0]];
-        
+
         rows.forEach(function (row) {
-            var name = ctz.calculate(row.lat, row.lon).timezone; 
+            var name = ctz.calculate(row.lat, row.lon).timezone;
             if (argv.verbose) {
                 console.log([
                     offsets[name],
@@ -75,7 +74,7 @@ var dst = argv.dst || argv._.shift();
 
 tztime(timestr, src, dst, function (err, times) {
     if (err) return error(err);
-    
+
     var len = argv.all ? times.length : 1;
     if (argv.n !== undefined) len = argv.n;
     len = Math.min(times.length, len);
